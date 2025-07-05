@@ -222,33 +222,51 @@
         const onlyPochaMenus = ['하이네켄 생맥주', '테라 생맥주', '아메리카노', '얼음 바틀'];
         const pochaMenus = data.filter(menu => onlyPochaMenus.some(name => menu.name.includes(name)));
         const commonMenus = data.filter(menu => !onlyPochaMenus.some(name => menu.name.includes(name)));
+        function menuCard(menu) {
+          return `<div class="menu-item bg-gray-900 rounded-xl p-4 flex flex-col md:flex-row md:items-center md:justify-between neon-border shadow-lg">
+            <div class="flex flex-col md:flex-row md:items-center gap-2">
+              <span class="menu-name font-bold text-white text-base md:text-lg">${menu.name}</span>
+              <span class="menu-price text-green-400 font-bold text-base md:text-lg ml-0 md:ml-4">${menu.price.toLocaleString()}원</span>
+            </div>
+            <div class="menu-qty flex items-center gap-2 mt-2 md:mt-0">
+              <button type="button" class="qty-btn minus-btn px-2 py-1 bg-gray-800 text-white rounded-full neon-button text-lg font-bold" data-id="${menu.id}" ${menu.soldOut ? 'disabled' : ''}>-</button>
+              <span id="qty_${menu.id}" class="w-8 text-center font-bold text-white">0</span>
+              <button type="button" class="qty-btn plus-btn px-2 py-1 bg-primary text-white rounded-full neon-button text-lg font-bold" data-id="${menu.id}" ${menu.soldOut ? 'disabled' : ''}>+</button>
+              <input type="hidden" id="menu_${menu.id}" value="0">
+              ${menu.soldOut ? '<span class="ml-2 text-red-400 font-bold">품절</span>' : ''}
+            </div>
+          </div>`;
+        }
         pochaMenuListDiv.innerHTML = '<h2 class="text-lg font-bold text-primary mb-2">낭만포차 전용 메뉴</h2>' +
-          pochaMenus.map(menu =>
-            `<div class="menu-item bg-gray-900 rounded-xl p-4 flex flex-col md:flex-row md:items-center md:justify-between neon-border shadow-lg">
-              <div class="flex flex-col md:flex-row md:items-center gap-2">
-                <span class="menu-name font-bold text-white text-base md:text-lg">${menu.name}</span>
-                <span class="menu-price text-green-400 font-bold text-base md:text-lg ml-0 md:ml-4">${menu.price.toLocaleString()}원</span>
-              </div>
-              <div class="menu-qty flex items-center gap-2 mt-2 md:mt-0">
-                <input type="number" min="0" max="20" value="0" id="menu_${menu.id}" class="neon-input rounded-md px-2 py-1 w-16 text-center font-bold bg-gray-800 text-white" ${menu.soldOut ? 'disabled' : ''}>
-                ${menu.soldOut ? '<span class="ml-2 text-red-400 font-bold">품절</span>' : ''}
-              </div>
-            </div>`
-          ).join('');
+          pochaMenus.map(menuCard).join('');
         commonMenuListDiv.innerHTML = '<h2 class="text-lg font-bold text-primary mb-2">낭만포차/객실 공용 메뉴</h2>' +
-          commonMenus.map(menu =>
-            `<div class="menu-item bg-gray-900 rounded-xl p-4 flex flex-col md:flex-row md:items-center md:justify-between neon-border shadow-lg">
-              <div class="flex flex-col md:flex-row md:items-center gap-2">
-                <span class="menu-name font-bold text-white text-base md:text-lg">${menu.name}</span>
-                <span class="menu-price text-green-400 font-bold text-base md:text-lg ml-0 md:ml-4">${menu.price.toLocaleString()}원</span>
-              </div>
-              <div class="menu-qty flex items-center gap-2 mt-2 md:mt-0">
-                <input type="number" min="0" max="20" value="0" id="menu_${menu.id}" class="neon-input rounded-md px-2 py-1 w-16 text-center font-bold bg-gray-800 text-white" ${menu.soldOut ? 'disabled' : ''}>
-                ${menu.soldOut ? '<span class="ml-2 text-red-400 font-bold">품절</span>' : ''}
-              </div>
-            </div>`
-          ).join('');
-        addQtyListeners();
+          commonMenus.map(menuCard).join('');
+        // 버튼 이벤트 연결
+        menuData.forEach(menu => {
+          const minusBtn = document.querySelector(`.minus-btn[data-id='${menu.id}']`);
+          const plusBtn = document.querySelector(`.plus-btn[data-id='${menu.id}']`);
+          const qtySpan = document.getElementById(`qty_${menu.id}`);
+          const hiddenInput = document.getElementById(`menu_${menu.id}`);
+          if (!minusBtn || !plusBtn || !qtySpan || !hiddenInput) return;
+          minusBtn.addEventListener('click', () => {
+            let qty = parseInt(qtySpan.textContent, 10);
+            if (qty > 0) {
+              qty--;
+              qtySpan.textContent = qty;
+              hiddenInput.value = qty;
+              updateOrderPreview();
+            }
+          });
+          plusBtn.addEventListener('click', () => {
+            let qty = parseInt(qtySpan.textContent, 10);
+            if (qty < 20) {
+              qty++;
+              qtySpan.textContent = qty;
+              hiddenInput.value = qty;
+              updateOrderPreview();
+            }
+          });
+        });
         updateOrderPreview();
       });
 
