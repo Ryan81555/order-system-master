@@ -5,7 +5,36 @@
   <title>크리스월드 빌리지 메뉴 주문시스템</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <script src="https://cdn.tailwindcss.com/3.4.16"></script>
-  <script>tailwind.config={theme:{extend:{colors:{primary:'#B026FF',secondary:'#6A0DAD'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: '#090040',
+            purple: '#471396',
+            neon: '#B13BFF',
+            yellow: '#FFCC00',
+            primary: '#B13BFF',
+            secondary: '#471396',
+            accent: '#FFCC00',
+            dark: '#090040',
+          },
+          borderRadius: {
+            'none': '0px',
+            'sm': '4px',
+            DEFAULT: '8px',
+            'md': '12px',
+            'lg': '16px',
+            'xl': '20px',
+            '2xl': '24px',
+            '3xl': '32px',
+            'full': '9999px',
+            'button': '8px',
+          },
+        },
+      },
+    };
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
@@ -14,15 +43,15 @@
   <style>
     body {
       font-family: 'Noto Sans KR', sans-serif;
-      background-color: #1A1A1A;
+      background-color: #090040;
       color: #FFFFFF;
       min-height: 100vh;
     }
     .neon-text {
-      text-shadow: 0 0 5px #B026FF, 0 0 10px #B026FF, 0 0 15px #B026FF;
+      text-shadow: 0 0 5px #B13BFF, 0 0 10px #B13BFF, 0 0 15px #B13BFF;
     }
     .neon-border {
-      box-shadow: 0 0 5px #B026FF, 0 0 10px #B026FF;
+      box-shadow: 0 0 5px #B13BFF, 0 0 10px #B13BFF;
     }
     .neon-button {
       position: relative;
@@ -37,27 +66,27 @@
       right: -2px;
       bottom: -2px;
       z-index: -1;
-      background: #B026FF;
+      background: #B13BFF;
       filter: blur(8px);
       opacity: 0.7;
       border-radius: 10px;
     }
     .neon-button:hover {
       transform: translateY(-2px);
-      box-shadow: 0 0 15px #B026FF;
+      box-shadow: 0 0 15px #B13BFF;
     }
     .neon-input {
-      border: 1px solid #B026FF;
-      box-shadow: 0 0 5px #B026FF;
+      border: 1px solid #B13BFF;
+      box-shadow: 0 0 5px #B13BFF;
     }
     .neon-input:focus {
-      box-shadow: 0 0 10px #B026FF, 0 0 15px #B026FF;
+      box-shadow: 0 0 10px #B13BFF, 0 0 15px #B13BFF;
     }
     .cart-badge {
       position: absolute;
       top: -5px;
       right: -5px;
-      background-color: #B026FF;
+      background-color: #B13BFF;
       color: white;
       border-radius: 50%;
       width: 20px;
@@ -67,20 +96,20 @@
       justify-content: center;
       font-size: 12px;
       font-weight: bold;
-      box-shadow: 0 0 5px #B026FF;
+      box-shadow: 0 0 5px #B13BFF;
     }
   </style>
 </head>
-<body class="relative">
+<body class="relative bg-navy min-h-screen">
     <!-- 네비게이션 바 -->
-    <nav class="fixed top-0 left-0 w-full bg-black bg-opacity-90 z-50 border-b border-primary shadow-lg">
+    <nav class="fixed top-0 left-0 w-full bg-navy bg-opacity-95 z-50 border-b-2 border-yellow shadow-lg">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <h1 class="text-xl font-bold neon-text text-primary font-['Pacifico']">크리스월드 빌리지 낭만포차</h1>
+            <h1 class="text-xl font-bold neon-text text-neon font-['Pacifico']">크리스월드 빌리지 <span class="text-yellow">낭만포차</span></h1>
             <div class="relative cursor-pointer" id="cartIcon">
                 <div class="w-10 h-10 flex items-center justify-center">
-                    <i class="ri-shopping-cart-2-line ri-lg text-white"></i>
+                    <i class="ri-shopping-cart-2-line ri-lg text-yellow"></i>
                 </div>
-                <span class="cart-badge" id="cartBadge">0</span>
+                <span class="cart-badge bg-yellow text-navy">0</span>
             </div>
         </div>
     </nav>
@@ -88,18 +117,18 @@
     <main class="container mx-auto px-4 pt-20 pb-24 max-w-md">
         <!-- 안내문구 및 입력폼 -->
         <section class="py-6 text-center">
-            <div class="bg-black bg-opacity-60 rounded-xl p-4 mb-4 neon-border">
-                <div class="text-primary font-bold mb-2">테이블 번호 또는 객실 동호수를 적어주세요.</div>
-                <div class="text-sm text-green-400 mb-2">낭만포차에 계시다면 <b>테이블 번호</b>를,<br>크리스월드 빌리지 객실에서 편안함을 만끽 중이시라면 <b>동/호수</b>를 적어주세요.</div>
+            <div class="bg-purple bg-opacity-80 rounded-xl p-4 mb-4 border-2 border-yellow neon-border">
+                <div class="text-yellow font-bold mb-2">테이블 번호 또는 객실 동호수를 적어주세요.</div>
+                <div class="text-sm text-neon mb-2">낭만포차에 계시다면 <b>테이블 번호</b>를,<br>크리스월드 빌리지 객실에서 편안함을 만끽 중이시라면 <b>동/호수</b>를 적어주세요.</div>
                 <div class="flex flex-col gap-2 items-center">
-                    <label class="flex items-center gap-2">테이블 번호:
-                        <input type="number" id="tableNum" min="1" max="20" required class="neon-input rounded-md px-2 py-1 w-20 text-center font-bold bg-gray-900 text-white" />
+                    <label class="flex items-center gap-2 text-yellow">테이블 번호:
+                        <input type="number" id="tableNum" min="1" max="20" required class="neon-input rounded-md px-2 py-1 w-20 text-center font-bold bg-navy text-yellow border-yellow" />
                     </label>
-                    <label class="flex items-center gap-2">객실 동호수:
-                        <input type="text" id="roomNum" maxlength="20" placeholder="예: C동 101호" class="neon-input rounded-md px-2 py-1 w-32 text-center font-bold bg-gray-900 text-white" />
+                    <label class="flex items-center gap-2 text-yellow">객실 동호수:
+                        <input type="text" id="roomNum" maxlength="20" placeholder="예: C동 101호" class="neon-input rounded-md px-2 py-1 w-32 text-center font-bold bg-navy text-yellow border-yellow" />
                     </label>
-                    <label class="flex items-center gap-2">전화번호:
-                        <input type="tel" id="phoneNum" maxlength="20" placeholder="예: 010-1234-5678" class="neon-input rounded-md px-2 py-1 w-36 text-center font-bold bg-gray-900 text-white" />
+                    <label class="flex items-center gap-2 text-yellow">전화번호:
+                        <input type="tel" id="phoneNum" maxlength="20" placeholder="예: 010-1234-5678" class="neon-input rounded-md px-2 py-1 w-36 text-center font-bold bg-navy text-yellow border-yellow" />
                     </label>
                 </div>
             </div>
@@ -110,41 +139,41 @@
         </section>
         <!-- 주문 미리보기 -->
         <section class="mb-8">
-            <div id="orderPreview" class="bg-gray-900 rounded-xl p-4 neon-border mb-4">
-                <div class="font-bold text-primary mb-2">주문 미리보기</div>
+            <div id="orderPreview" class="bg-purple rounded-xl p-4 neon-border mb-4 border-2 border-yellow">
+                <div class="font-bold text-yellow mb-2">주문 미리보기</div>
                 <div id="previewItems" class="text-white mb-2"></div>
-                <div id="previewTotal" class="font-bold text-green-400"></div>
+                <div id="previewTotal" class="font-bold text-neon"></div>
             </div>
-            <button id="orderBtn" class="w-full py-3 bg-primary text-white rounded-button font-medium neon-button text-lg">주문하기</button>
-            <div id="result" class="mt-4 text-center text-primary font-bold min-h-[24px]"></div>
+            <button id="orderBtn" class="w-full py-3 bg-yellow text-navy rounded-button font-bold neon-button text-lg hover:bg-neon hover:text-white transition">주문하기</button>
+            <div id="result" class="mt-4 text-center text-neon font-bold min-h-[24px]"></div>
         </section>
         <!-- 안내/계좌 정보 -->
         <section class="mb-8">
-            <div class="bg-black bg-opacity-60 rounded-xl p-4 neon-border text-center">
-                <div class="text-red-400 font-bold mb-2">결제 방식은 계좌이체만 지원합니다.<br>감사합니다.</div>
-                <div class="text-white font-bold">입금계좌: 산림조합중앙회 164-11-0000788 <br>(예금주: 이동훈)</div>
+            <div class="bg-purple bg-opacity-90 rounded-xl p-4 neon-border text-center border-2 border-yellow">
+                <div class="text-neon font-bold mb-2">결제 방식은 계좌이체만 지원합니다.<br>감사합니다.</div>
+                <div class="text-yellow font-bold">입금계좌: 산림조합중앙회 164-11-0000788 <br>(예금주: 이동훈)</div>
             </div>
-            <button id="adminLoginBtn" class="mt-6 w-full py-2 bg-gray-800 text-white rounded-button neon-button">관리자 로그인</button>
+            <button id="adminLoginBtn" class="mt-6 w-full py-2 bg-navy text-yellow rounded-button neon-button border-2 border-yellow hover:bg-yellow hover:text-navy transition">관리자 로그인</button>
         </section>
         <!-- 카페 프로모션 안내 -->
         <section class="mb-8">
-            <div class="bg-orange-50 bg-opacity-90 border-2 border-orange-300 rounded-xl p-6 neon-border text-center text-orange-900 shadow-lg">
-                <div class="text-xl font-bold neon-text text-orange-600 mb-2">
-                    🎉 크리스월드 빌리지 고객 전용 <br>가평 카페 특별 할인!
+            <div class="bg-purple bg-opacity-90 border-2 border-yellow rounded-xl p-6 neon-border text-center text-yellow shadow-lg">
+                <div class="text-xl font-bold neon-text text-neon mb-2">
+                    🎉 크리스월드 빌리지 고객 전용 <span class="text-yellow">가평 카페 특별 할인!</span>
                 </div>
                 <div class="mb-2">
                     저희 크리스월드 빌리지에 오신 분들께만 드리는 혜택!<br>
-                    <b>카페 "가평 레이크애비뉴"</b>에서 <span class="text-orange-600 font-semibold"><br>음료 전품목 10% 할인</span>을 받으실 수 있습니다.<br>
-                    <span class="text-red-600">(※ 베이커리류는 할인 제외)</span>
+                    <b class="text-yellow">카페 "가평 레이크애비뉴"</b>에서 <span class="text-neon font-semibold"><br>음료 전품목 10% 할인</span>을 받으실 수 있습니다.<br>
+                    <span class="text-neon">(※ 베이커리류는 할인 제외)</span>
                 </div>
                 <div class="mb-2">
-                    <b>할인 방법:</b> 체크인 시 받으신 안내 문자 내역을 <br>카페 직원에게 보여주세요!
+                    <b class="text-yellow">할인 방법:</b> 체크인 시 받으신 안내 문자 내역을 <br>카페 직원에게 보여주세요!
                 </div>
                 <div class="mb-2">
-                    <b>카페 위치:</b> 가평군 호반로 1526 <br>(크리스월드 빌리지에서 차량 10분) 설악 IC 방향
+                    <b class="text-yellow">카페 위치:</b> 가평군 호반로 1526 <br>(크리스월드 빌리지에서 차량 10분) 설악 IC 방향
                 </div>
                 <div class="mt-4">
-                    <a href="https://naver.me/FtTh8MWm" target="_blank" class="text-blue-600 font-bold underline hover:text-primary transition">
+                    <a href="https://naver.me/FtTh8MWm" target="_blank" class="text-yellow font-bold underline hover:text-neon transition">
                         📍 네이버 지도에서 카페 위치 보기
                     </a>
                 </div>
@@ -223,23 +252,23 @@
         const pochaMenus = data.filter(menu => onlyPochaMenus.some(name => menu.name.includes(name)));
         const commonMenus = data.filter(menu => !onlyPochaMenus.some(name => menu.name.includes(name)));
         function menuCard(menu) {
-          return `<div class="menu-item bg-gray-900 rounded-xl p-4 flex flex-col md:flex-row md:items-center md:justify-between neon-border shadow-lg">
+          return `<div class="menu-item bg-purple rounded-xl p-4 flex flex-col md:flex-row md:items-center md:justify-between neon-border shadow-lg border-2 border-neon">
             <div class="flex flex-col md:flex-row md:items-center gap-2">
               <span class="menu-name font-bold text-white text-base md:text-lg">${menu.name}</span>
-              <span class="menu-price text-green-400 font-bold text-base md:text-lg ml-0 md:ml-4">${menu.price.toLocaleString()}원</span>
+              <span class="menu-price text-yellow font-bold text-base md:text-lg ml-0 md:ml-4">${menu.price.toLocaleString()}원</span>
             </div>
             <div class="menu-qty flex items-center gap-2 mt-2 md:mt-0">
-              <button type="button" class="qty-btn minus-btn px-2 py-1 bg-gray-800 text-white rounded-full neon-button text-lg font-bold" data-id="${menu.id}" ${menu.soldOut ? 'disabled' : ''}>-</button>
-              <span id="qty_${menu.id}" class="w-8 text-center font-bold text-white">0</span>
-              <button type="button" class="qty-btn plus-btn px-2 py-1 bg-primary text-white rounded-full neon-button text-lg font-bold" data-id="${menu.id}" ${menu.soldOut ? 'disabled' : ''}>+</button>
+              <button type="button" class="qty-btn minus-btn px-2 py-1 bg-purple text-yellow rounded-full neon-button text-lg font-bold border-2 border-yellow hover:bg-neon hover:text-white transition" data-id="${menu.id}" ${menu.soldOut ? 'disabled' : ''}>-</button>
+              <span id="qty_${menu.id}" class="w-8 text-center font-bold text-yellow">0</span>
+              <button type="button" class="qty-btn plus-btn px-2 py-1 bg-yellow text-navy rounded-full neon-button text-lg font-bold border-2 border-yellow hover:bg-neon hover:text-white transition" data-id="${menu.id}" ${menu.soldOut ? 'disabled' : ''}>+</button>
               <input type="hidden" id="menu_${menu.id}" value="0">
-              ${menu.soldOut ? '<span class="ml-2 text-red-400 font-bold">품절</span>' : ''}
+              ${menu.soldOut ? '<span class="ml-2 text-neon font-bold">품절</span>' : ''}
             </div>
           </div>`;
         }
-        pochaMenuListDiv.innerHTML = '<h2 class="text-lg font-bold text-primary mb-2">낭만포차 전용 메뉴</h2>' +
+        pochaMenuListDiv.innerHTML = '<h2 class="text-lg font-bold text-neon mb-2">낭만포차 전용 메뉴</h2>' +
           pochaMenus.map(menuCard).join('');
-        commonMenuListDiv.innerHTML = '<h2 class="text-lg font-bold text-primary mb-2">낭만포차/객실 공용 메뉴</h2>' +
+        commonMenuListDiv.innerHTML = '<h2 class="text-lg font-bold text-neon mb-2">낭만포차/객실 공용 메뉴</h2>' +
           commonMenus.map(menuCard).join('');
         // 버튼 이벤트 연결
         menuData.forEach(menu => {
