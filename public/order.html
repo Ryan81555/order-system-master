@@ -98,9 +98,21 @@
       font-weight: bold;
       box-shadow: 0 0 5px #B13BFF;
     }
+    #starfield-bg {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+      display: block;
+    }
+    .container, nav, main, section, .neon-border, .menu-item, .cart-badge {
+      position: relative;
+      z-index: 10;
+    }
   </style>
 </head>
 <body class="relative bg-navy min-h-screen">
+    <canvas id="starfield-bg"></canvas>
     <!-- 네비게이션 바 -->
     <nav class="fixed top-0 left-0 w-full bg-navy bg-opacity-95 z-50 border-b-2 border-yellow shadow-lg">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
@@ -371,6 +383,71 @@
       function closeImageModal() {
         document.getElementById('imgModal').style.display = 'none';
       }
+
+      // Starfield 효과
+(function() {
+  const colors = ['#FFCC00', '#B13BFF', '#fff', '#471396', '#56DFCF', '#ADEED9', '#D3ECCD'];
+  const STAR_COUNT = 160;
+  let stars = [];
+  let w = window.innerWidth;
+  let h = window.innerHeight;
+  const canvas = document.getElementById('starfield-bg');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  function resize() {
+    w = window.innerWidth;
+    h = window.innerHeight;
+    canvas.width = w;
+    canvas.height = h;
+  }
+  function randomStar() {
+    return {
+      x: Math.random() * w,
+      y: Math.random() * h,
+      r: Math.random() * 1.6 + 0.6, // 0.6~2.2로 크기 변화 확대
+      color: colors[Math.floor(Math.random() * colors.length)],
+      speed: Math.random() * 0.15 + 0.05,
+      twinkle: Math.random() * Math.PI * 2
+    };
+  }
+  function createStars() {
+    stars = [];
+    for (let i = 0; i < STAR_COUNT; i++) {
+      stars.push(randomStar());
+    }
+  }
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    for (let star of stars) {
+      // twinkle
+      const alpha = 0.7 + 0.3 * Math.sin(star.twinkle);
+      ctx.globalAlpha = alpha;
+      ctx.beginPath();
+      ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+      ctx.fillStyle = star.color;
+      ctx.shadowColor = star.color;
+      ctx.shadowBlur = 8;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.globalAlpha = 1;
+      // move
+      star.y += star.speed;
+      if (star.y > h) {
+        star.x = Math.random() * w;
+        star.y = 0;
+      }
+      star.twinkle += 0.04 + Math.random() * 0.03;
+    }
+    requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize', () => {
+    resize();
+    createStars();
+  });
+  resize();
+  createStars();
+  draw();
+})();
         </script>
         <div id="imgModal" style="display:none; position:fixed; z-index:99999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.7); align-items:center; justify-content:center;">
           <span onclick="closeImageModal()" style="position:absolute; top:24px; right:36px; color:#fff; font-size:2.5em; font-weight:700; cursor:pointer; z-index:100001;">&times;</span>
