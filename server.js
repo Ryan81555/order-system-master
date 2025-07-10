@@ -1,6 +1,9 @@
 const express = require('express');
 const app = express();
-const PORT = process.env.PORT || 8080;
+const port = process.env.PORT || 8080;
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
 
 // 정적 파일(HTML, CSS, JS) 제공
 app.use(express.static('public', { index: false }));
@@ -22,7 +25,8 @@ const menuList = [
     { id: 8, name: '김치만두', price: 6000, "soldOut": false },
     { id: 9, name: '반반만두', price: 6000, "soldOut": false },
     { id: 10, name: '아메리카노', price: 3000, "soldOut": false },
-    { id: 11, name: '얼음 바틀', price: 3000, "soldOut": false }
+    { id: 11, name: '얼음 바틀', price: 3000, "soldOut": false },
+    { id: 12, name: '참이슬 400ml', price: 3000, "soldOut": false }
 ];
 
 // 메뉴 목록 API

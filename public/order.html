@@ -194,11 +194,17 @@
     </main>
   <script>
     let menuData = [];
-    // 영업시간: 10시 ~ 22시
-    function isBusinessHour() {
+    // 영업시간 체크 함수들
+    function isCommonMenuHour() {
       const now = new Date();
       const hour = now.getHours();
-      return hour >= 10 && hour < 22;
+      return hour >= 10 && hour < 22; // 오후 10시까지만
+    }
+    
+    function isPochaMenuHour() {
+      const now = new Date();
+      const hour = now.getHours();
+      return hour >= 10 && hour < 24; // 오전 12시까지 (24시 = 0시)
     }
     // URL에서 table 파라미터 읽기
     function getTableFromUrl() {
@@ -213,11 +219,16 @@
         document.getElementById('tableNum').readOnly = true;
       }
       // 영업시간 체크
-      if (!isBusinessHour()) {
+      const isCommonMenuAvailable = isCommonMenuHour();
+      const isPochaMenuAvailable = isPochaMenuHour();
+      
+      if (!isCommonMenuAvailable && !isPochaMenuAvailable) {
         document.getElementById('orderBtn').disabled = true;
         document.getElementById('orderBtn').style.background = '#ccc';
         document.getElementById('orderBtn').innerText = '영업시간이 아닙니다';
-        document.getElementById('result').innerHTML = '<span style="color:#ff4e50;">주문 가능 시간은 오전 10시 ~ 오후 10시입니다.</span>';
+        document.getElementById('result').innerHTML = '<span style="color:#ff4e50;">주문 가능 시간은 오전 10시 ~ 오전 12시입니다.</span>';
+      } else if (!isCommonMenuAvailable) {
+        document.getElementById('result').innerHTML = '<span style="color:#ff4e50;">낭만포차/객실 공용 메뉴는 오후 10시까지만 주문 가능합니다. 낭만포차 전용 메뉴만 주문 가능합니다.</span>';
       }
     };
     // 메뉴 불러오기
@@ -264,17 +275,22 @@
         const pochaMenus = data.filter(menu => onlyPochaMenus.some(name => menu.name.includes(name)));
         const commonMenus = data.filter(menu => !onlyPochaMenus.some(name => menu.name.includes(name)));
         function menuCard(menu) {
+          const isPochaMenu = onlyPochaMenus.some(name => menu.name.includes(name));
+          const isAvailable = isPochaMenu ? isPochaMenuHour() : isCommonMenuHour();
+          const isDisabled = menu.soldOut || !isAvailable;
+          
           return `<div class="menu-item bg-purple rounded-xl p-4 flex flex-col md:flex-row md:items-center md:justify-between neon-border shadow-lg border-2 border-neon">
             <div class="flex flex-col md:flex-row md:items-center gap-2">
               <span class="menu-name font-bold text-white text-base md:text-lg">${menu.name}</span>
               <span class="menu-price text-yellow font-bold text-base md:text-lg ml-0 md:ml-4">${menu.price.toLocaleString()}원</span>
             </div>
             <div class="menu-qty flex items-center gap-2 mt-2 md:mt-0">
-              <button type="button" class="qty-btn minus-btn px-2 py-1 bg-purple text-yellow rounded-full neon-button text-lg font-bold border-2 border-yellow hover:bg-neon hover:text-white transition" data-id="${menu.id}" ${menu.soldOut ? 'disabled' : ''}>-</button>
+              <button type="button" class="qty-btn minus-btn px-2 py-1 bg-purple text-yellow rounded-full neon-button text-lg font-bold border-2 border-yellow hover:bg-neon hover:text-white transition" data-id="${menu.id}" ${isDisabled ? 'disabled' : ''}>-</button>
               <span id="qty_${menu.id}" class="w-8 text-center font-bold text-yellow">0</span>
-              <button type="button" class="qty-btn plus-btn px-2 py-1 bg-yellow text-navy rounded-full neon-button text-lg font-bold border-2 border-yellow hover:bg-neon hover:text-white transition" data-id="${menu.id}" ${menu.soldOut ? 'disabled' : ''}>+</button>
+              <button type="button" class="qty-btn plus-btn px-2 py-1 bg-yellow text-navy rounded-full neon-button text-lg font-bold border-2 border-yellow hover:bg-neon hover:text-white transition" data-id="${menu.id}" ${isDisabled ? 'disabled' : ''}>+</button>
               <input type="hidden" id="menu_${menu.id}" value="0">
               ${menu.soldOut ? '<span class="ml-2 text-neon font-bold">품절</span>' : ''}
+              ${!isAvailable && !menu.soldOut ? '<span class="ml-2 text-neon font-bold">시간제한</span>' : ''}
             </div>
           </div>`;
         }
@@ -330,6 +346,23 @@
         }
         if (!phone) {
           document.getElementById('result').innerText = '전화번호를 입력하세요!';
+          return;
+        }
+        
+        // 시간 체크
+        const isCommonMenuAvailable = isCommonMenuHour();
+        const isPochaMenuAvailable = isPochaMenuHour();
+        
+        // 주문하려는 메뉴 중 시간 제한에 걸리는 것이 있는지 확인
+        const hasTimeRestrictedItem = items.some(item => {
+          const menu = menuData.find(m => m.id === item.id);
+          const isPochaMenu = onlyPochaMenus.some(name => menu.name.includes(name));
+          const isAvailable = isPochaMenu ? isPochaMenuAvailable : isCommonMenuAvailable;
+          return !isAvailable;
+        });
+        
+        if (hasTimeRestrictedItem) {
+          document.getElementById('result').innerHTML = '<span style="color: #ff4e50;">시간 제한으로 주문할 수 없는 메뉴가 포함되어 있습니다.</span>';
           return;
         }
       
