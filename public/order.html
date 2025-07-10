@@ -271,7 +271,7 @@
         menuData = data;
         const pochaMenuListDiv = document.getElementById('pochaMenuList');
         const commonMenuListDiv = document.getElementById('commonMenuList');
-        const onlyPochaMenus = ['하이네켄 생맥주', '테라 생맥주', '아메리카노', '얼음 바틀'];
+        const onlyPochaMenus = ['하이네켄 생맥주', '테라 생맥주', '아메리카노', '얼음 바틀', '참이슬 400ml'];
         const pochaMenus = data.filter(menu => onlyPochaMenus.some(name => menu.name.includes(name)));
         const commonMenus = data.filter(menu => !onlyPochaMenus.some(name => menu.name.includes(name)));
         function menuCard(menu) {
