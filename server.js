@@ -78,8 +78,8 @@ app.get('/admin', (req, res) => {
     res.sendFile(__dirname + '/public/admin.html');
 });
 
-app.listen(PORT, () => {
-    console.log(`서버가 http://localhost:${PORT} 에서 실행 중입니다`);
+app.listen(port, () => {
+    console.log(`서버가 http://localhost:${port} 에서 실행 중입니다`);
 });
 
 // 주문 삭제(취소) API
