@@ -325,80 +325,81 @@
           });
         });
         updateOrderPreview();
-      });
-
-      document.getElementById('orderBtn').onclick = () => {
-        const table = document.getElementById('tableNum').value.trim();
-        const room = document.getElementById('roomNum').value.trim();
-        const phone = document.getElementById('phoneNum').value.trim();
-        const items = menuData
-          .map(menu => ({
-            id: menu.id,
-            name: menu.name,
-            price: menu.price,
-            qty: Number(document.getElementById('menu_' + menu.id).value)
-          }))
-          .filter(item => item.qty > 0);
-      
-        if ((!table && !room) || items.length === 0) {
-          document.getElementById('result').innerText = '테이블 번호 또는 동/호수 중 하나와 메뉴를 입력하세요!';
-          return;
-        }
-        if (!phone) {
-          document.getElementById('result').innerText = '전화번호를 입력하세요!';
-          return;
-        }
         
-        // 시간 체크
-        const isCommonMenuAvailable = isCommonMenuHour();
-        const isPochaMenuAvailable = isPochaMenuHour();
+        // 주문하기 버튼 이벤트 리스너
+        document.getElementById('orderBtn').onclick = () => {
+          const table = document.getElementById('tableNum').value.trim();
+          const room = document.getElementById('roomNum').value.trim();
+          const phone = document.getElementById('phoneNum').value.trim();
+          const items = menuData
+            .map(menu => ({
+              id: menu.id,
+              name: menu.name,
+              price: menu.price,
+              qty: Number(document.getElementById('menu_' + menu.id).value)
+            }))
+            .filter(item => item.qty > 0);
         
-        // 주문하려는 메뉴 중 시간 제한에 걸리는 것이 있는지 확인
-        const hasTimeRestrictedItem = items.some(item => {
-          const menu = menuData.find(m => m.id === item.id);
-          const isPochaMenu = onlyPochaMenus.some(name => menu.name.includes(name));
-          const isAvailable = isPochaMenu ? isPochaMenuAvailable : isCommonMenuAvailable;
-          return !isAvailable;
-        });
-        
-        if (hasTimeRestrictedItem) {
-          document.getElementById('result').innerHTML = '<span style="color: #ff4e50;">시간 제한으로 주문할 수 없는 메뉴가 포함되어 있습니다.</span>';
-          return;
-        }
-      
-        const excessiveQtyItem = items.find(item => item.qty > 20);
-        if (excessiveQtyItem) {
-          document.getElementById('result').innerHTML = '<span style="color: #ff4e50;">한 메뉴당 최대 20개까지만 주문할 수 있습니다.</span>';
-          return;
-        }
-      
-        const total = items.reduce((sum, item) => sum + item.price * item.qty, 0);
-
-        if (total > 500000) {
-            document.getElementById('result').innerHTML = '<span style="color: #ff4e50;">총 주문 금액이 50만원을 초과할 수 없습니다.<br>대량 주문은 전화로 문의해주세요.</span>';
+          if ((!table && !room) || items.length === 0) {
+            document.getElementById('result').innerText = '테이블 번호 또는 동/호수 중 하나와 메뉴를 입력하세요!';
             return;
-        }
-      
-        fetch('/api/order', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ table, room, phone, items, total })
-        })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            document.getElementById('result').innerHTML =
-              '주문이 접수되었습니다!<br>' +
-              '<span style="color:#ff4e50;font-weight:bold;">결제 방식은 계좌이체만 지원합니다.</span><br>' +
-              '<span style="color:#43e97b;font-weight:bold;">입금계좌: 산림조합중앙회 164-11-0000788 <br>(예금주: 이동훈)</span>';
-            // 입력값 초기화
-            menuData.forEach(menu => {
-              document.getElementById('menu_' + menu.id).value = 0;
-            });
-            document.getElementById('phoneNum').value = '';
           }
-        });
-      };
+          if (!phone) {
+            document.getElementById('result').innerText = '전화번호를 입력하세요!';
+            return;
+          }
+          
+          // 시간 체크
+          const isCommonMenuAvailable = isCommonMenuHour();
+          const isPochaMenuAvailable = isPochaMenuHour();
+          
+          // 주문하려는 메뉴 중 시간 제한에 걸리는 것이 있는지 확인
+          const hasTimeRestrictedItem = items.some(item => {
+            const menu = menuData.find(m => m.id === item.id);
+            const isPochaMenu = onlyPochaMenus.some(name => menu.name.includes(name));
+            const isAvailable = isPochaMenu ? isPochaMenuAvailable : isCommonMenuAvailable;
+            return !isAvailable;
+          });
+          
+          if (hasTimeRestrictedItem) {
+            document.getElementById('result').innerHTML = '<span style="color: #ff4e50;">시간 제한으로 주문할 수 없는 메뉴가 포함되어 있습니다.</span>';
+            return;
+          }
+        
+          const excessiveQtyItem = items.find(item => item.qty > 20);
+          if (excessiveQtyItem) {
+            document.getElementById('result').innerHTML = '<span style="color: #ff4e50;">한 메뉴당 최대 20개까지만 주문할 수 있습니다.</span>';
+            return;
+          }
+        
+          const total = items.reduce((sum, item) => sum + item.price * item.qty, 0);
+
+          if (total > 500000) {
+              document.getElementById('result').innerHTML = '<span style="color: #ff4e50;">총 주문 금액이 50만원을 초과할 수 없습니다.<br>대량 주문은 전화로 문의해주세요.</span>';
+              return;
+          }
+        
+          fetch('/api/order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ table, room, phone, items, total })
+          })
+          .then(res => res.json())
+          .then(data => {
+            if (data.success) {
+              document.getElementById('result').innerHTML =
+                '주문이 접수되었습니다!<br>' +
+                '<span style="color:#ff4e50;font-weight:bold;">결제 방식은 계좌이체만 지원합니다.</span><br>' +
+                '<span style="color:#43e97b;font-weight:bold;">입금계좌: 산림조합중앙회 164-11-0000788 <br>(예금주: 이동훈)</span>';
+              // 입력값 초기화
+              menuData.forEach(menu => {
+                document.getElementById('menu_' + menu.id).value = 0;
+              });
+              document.getElementById('phoneNum').value = '';
+            }
+          });
+        };
+      });
 
       document.getElementById('adminLoginBtn').onclick = function() {
         const pw = prompt('관리자 비밀번호를 입력하세요:');
