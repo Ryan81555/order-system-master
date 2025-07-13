@@ -488,7 +488,7 @@
         card.className = cardClass;
         card.innerHTML = `
           <div class="order-id">주문번호: ${order.id}</div>
-          <div class="order-table">테이블: ${order.table}</div>
+          <div class="order-table">${order.table ? `테이블: ${order.table}` : ''}${order.room ? `객실: ${order.room}` : ''}</div>
           <div class="order-phone">전화번호: ${{
             true: `<a href=\"tel:${order.phone ? order.phone.replace(/[^0-9]/g, '') : ''}\" style=\"color:#007aff;text-decoration:underline;font-weight:bold;\">${order.phone}</a>`,
             false: '-'
